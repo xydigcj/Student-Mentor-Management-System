@@ -1,0 +1,101 @@
+//students table database code
+
+CREATE TABLE `students` (
+  `first_name` varchar(100) DEFAULT NULL,
+  `last_name` varchar(100) DEFAULT NULL,
+  `usn` varchar(15) NOT NULL,
+  `department` varchar(100) DEFAULT NULL,
+  `semester` int(11) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `gender` enum('male','female','other') DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `phone` varchar(15) DEFAULT NULL,
+  `dob` date DEFAULT NULL,
+  `blood_group` varchar(5) DEFAULT NULL,
+  `religion` varchar(50) DEFAULT NULL,
+  `father_name` varchar(100) DEFAULT NULL,
+  `father_occupation` varchar(100) DEFAULT NULL,
+  `mother_name` varchar(100) DEFAULT NULL,
+  `mother_occupation` varchar(100) DEFAULT NULL,
+  `family_income` decimal(15,2) DEFAULT NULL,
+  `contact_student` varchar(15) DEFAULT NULL,
+  `contact_father` varchar(15) DEFAULT NULL,
+  `contact_mother` varchar(15) DEFAULT NULL,
+  PRIMARY KEY (`usn`)
+) 
+
+
+
+
+//mentors
+
+CREATE TABLE `mentors` (
+  `first_name` varchar(100) NOT NULL,
+  `last_name` varchar(100) NOT NULL,
+  `ufn` varchar(50) NOT NULL,
+  `department` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  UNIQUE KEY `ufn` (`ufn`),
+  UNIQUE KEY `email` (`email`)
+) 
+
+
+//results
+
+CREATE TABLE `results` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `usn` varchar(20) DEFAULT NULL,
+  `file_path` varchar(255) DEFAULT NULL,
+  `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+)
+
+//notifications
+
+CREATE TABLE `notifications` (
+  `usn` varchar(20) DEFAULT NULL,
+  `message` text DEFAULT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
+)
+
+//leave_applications
+
+CREATE TABLE `leave_applications` (
+  `usn` varchar(15) NOT NULL,
+  `ufn` varchar(15) NOT NULL,
+  `leave_reason` text NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `status` enum('pending','approved','rejected') DEFAULT 'pending',
+  `application_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`usn`,`ufn`,`start_date`),
+  KEY `ufn` (`ufn`),
+  CONSTRAINT `leave_applications_ibfk_1` FOREIGN KEY (`usn`) REFERENCES `students` (`usn`),
+  CONSTRAINT `leave_applications_ibfk_2` FOREIGN KEY (`ufn`) REFERENCES `mentors` (`ufn`)
+) 
+
+
+//faculty
+
+CREATE TABLE `faculty` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) 
+
+
+//attendance
+
+CREATE TABLE `attendance` (
+  `usn` varchar(15) NOT NULL,
+  `date` date NOT NULL,
+  `status` int(1) NOT NULL,
+  `subject_code` varchar(10) NOT NULL,
+  PRIMARY KEY (`usn`,`date`,`subject_code`),
+  CONSTRAINT `attendance_ibfk_1` FOREIGN KEY (`usn`) REFERENCES `students` (`usn`)
+) 
